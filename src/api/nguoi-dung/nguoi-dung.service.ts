@@ -3,13 +3,15 @@ import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
 import { FirebaseRepository } from '../firebase/firebase.repository';
 import { NguoiDung } from './entities/nguoi-dung.entity';
+import { FirebaseCollection } from '../firebase/firebase-collection.enum';
 
 @Injectable()
 export class NguoiDungService {
   private nguoiDungCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
   constructor(private firebaseRepository: FirebaseRepository) {
-    this.nguoiDungCollection =
-      this.firebaseRepository.getCollection('NguoiDung');
+    this.nguoiDungCollection = this.firebaseRepository.getCollection(
+      FirebaseCollection.NguoiDung,
+    );
   }
 
   async create(createNguoiDungDto: CreateNguoiDungDto): Promise<NguoiDung> {

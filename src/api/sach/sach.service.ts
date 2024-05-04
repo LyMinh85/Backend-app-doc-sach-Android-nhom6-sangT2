@@ -74,12 +74,28 @@ export class SachService {
     return sachList;
   }
 
-  async findOne(id: string): Promise<Sach> {
+  async findOne(id: string): Promise<SachDto> {
     const snapshot = await this.sachCollection.doc(id).get();
-    return new Sach({ id: snapshot.id, ...snapshot.data() });
+    const sachDto: SachDto = new SachDto({
+      id: snapshot.id,
+      ...snapshot.data(),
+    });
+    if (snapshot.data().ListTheLoaiRef) {
+      const listTheLoai = await Promise.all(
+        snapshot.data().ListTheLoaiRef.map(async (theLoaiRef) => {
+          const theLoaiDoc = await theLoaiRef.get();
+          return new TheLoaiSach({
+            id: theLoaiDoc.id,
+            ...theLoaiDoc.data(),
+          });
+        }),
+      );
+      sachDto.ListTheLoai = listTheLoai;
+    }
+    return sachDto;
   }
 
-  async update(id: string, updateSachDto: UpdateSachDto): Promise<Sach> {
+  async update(id: string, updateSachDto: UpdateSachDto): Promise<SachDto> {
     const ref = this.sachCollection.doc(id);
     const ListTheLoaiId = updateSachDto.ListTheLoaiId;
     let listTheLoaiRef = undefined;

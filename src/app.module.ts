@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { FirebaseModule } from './api/firebase/firebase.module';
 import { SachModule } from './api/sach/sach.module';
 import { TheLoaiSachModule } from './api/the-loai-sach/the-loai-sach.module';
+import { ChuongModule } from './api/chuong/chuong.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TheLoaiSachModule } from './api/the-loai-sach/the-loai-sach.module';
     FirebaseModule,
     SachModule,
     TheLoaiSachModule,
+    ChuongModule,
   ],
   controllers: [AppController],
   providers: [AppService],

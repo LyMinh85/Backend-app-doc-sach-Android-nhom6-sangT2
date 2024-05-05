@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Backend-app-doc-sach-Android-nhom6-sangT2
 
 ## Installation
 
@@ -45,18 +45,8 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## [Url của backend online](https://backend-app-doc-sach-android-nhom6-sangt2.onrender.com/api)
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
 
 ## Support
 

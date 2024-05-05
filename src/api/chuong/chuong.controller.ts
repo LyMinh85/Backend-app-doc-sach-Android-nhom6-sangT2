@@ -13,7 +13,7 @@ import { UpdateChuongDto } from './dto/update-chuong.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { Chuong } from './entities/chuong.entity';
 
-@Controller('chuong')
+@Controller('api/chuong')
 export class ChuongController {
   constructor(private readonly chuongService: ChuongService) {}
 

@@ -10,6 +10,7 @@ import { ChuongModule } from './api/chuong/chuong.module';
 import { LuotDocModule } from './api/luot-doc/luot-doc.module';
 import { DanhGiaModule } from './api/danh-gia/danh-gia.module';
 import { ThuVienSachCaNhanModule } from './api/thu-vien-sach-ca-nhan/thu-vien-sach-ca-nhan.module';
+import { LichSuCaNhanModule } from './api/lich-su-ca-nhan/lich-su-ca-nhan.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ThuVienSachCaNhanModule } from './api/thu-vien-sach-ca-nhan/thu-vien-sa
     LuotDocModule,
     DanhGiaModule,
     ThuVienSachCaNhanModule,
+    LichSuCaNhanModule,
   ],
   controllers: [AppController],
   providers: [AppService],

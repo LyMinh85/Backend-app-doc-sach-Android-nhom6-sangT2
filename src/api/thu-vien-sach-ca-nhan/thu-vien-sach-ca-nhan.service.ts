@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateThuVienSachCaNhanDto } from './dto/create-thu-vien-sach-ca-nhan.dto';
 import { UpdateThuVienSachCaNhanDto } from './dto/update-thu-vien-sach-ca-nhan.dto';
 import { FirebaseCollection } from '../firebase/firebase-collection.enum';
@@ -34,6 +34,19 @@ export class ThuVienSachCaNhanService {
   async create(
     createThuVienSachCaNhanDto: CreateThuVienSachCaNhanDto,
   ): Promise<ThuVienSachCaNhanDto> {
+    const thuVienSachCaNhan = await this.findByIdSachAndIdNguoiDung(
+      createThuVienSachCaNhanDto.idSach,
+      createThuVienSachCaNhanDto.idNguoiDung,
+    );
+
+    // if exist do not create
+    // show error message
+    if (thuVienSachCaNhan) {
+      throw new BadRequestException(
+        `ThuVienSachCaNhan with idSach ${createThuVienSachCaNhanDto.idSach} and idNguoiDung ${createThuVienSachCaNhanDto.idNguoiDung} already`,
+      );
+    }
+
     const ref = this.thuVienSachCaNhanColletion.doc();
     const id = ref.id;
     await ref.set({
@@ -58,6 +71,20 @@ export class ThuVienSachCaNhanService {
       throw new Error(`ThuVienSachCaNhan with id ${id} not found`);
     }
     return this.toThuVienSachCaNhanDto(doc.data());
+  }
+
+  async findByIdSachAndIdNguoiDung(
+    idSach: string,
+    idNguoiDung: string,
+  ): Promise<ThuVienSachCaNhanDto> {
+    const snapshot = await this.thuVienSachCaNhanColletion
+      .where('idSach', '==', idSach)
+      .where('idNguoiDung', '==', idNguoiDung)
+      .get();
+    if (snapshot.empty) {
+      return null;
+    }
+    return this.toThuVienSachCaNhanDto(snapshot.docs[0].data());
   }
 
   async update(

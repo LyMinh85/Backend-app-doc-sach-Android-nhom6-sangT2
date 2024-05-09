@@ -11,6 +11,7 @@ import { ThuVienSachCaNhanService } from './thu-vien-sach-ca-nhan.service';
 import { CreateThuVienSachCaNhanDto } from './dto/create-thu-vien-sach-ca-nhan.dto';
 import { UpdateThuVienSachCaNhanDto } from './dto/update-thu-vien-sach-ca-nhan.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ThuVienSachCaNhanDto } from './dto/thu-vien-sach-ca-nhan.dto';
 
 @Controller('thu-vien-sach-ca-nhan')
 export class ThuVienSachCaNhanController {
@@ -20,49 +21,51 @@ export class ThuVienSachCaNhanController {
 
   @Post()
   @ApiCreatedResponse({
-    type: CreateThuVienSachCaNhanDto,
+    type: ThuVienSachCaNhanDto,
     description: 'Create ThuVienSachCaNhan',
   })
-  create(@Body() createThuVienSachCaNhanDto: CreateThuVienSachCaNhanDto) {
+  create(
+    @Body() createThuVienSachCaNhanDto: CreateThuVienSachCaNhanDto,
+  ): Promise<ThuVienSachCaNhanDto> {
     return this.thuVienSachCaNhanService.create(createThuVienSachCaNhanDto);
   }
 
   @Get()
   @ApiOkResponse({
-    type: CreateThuVienSachCaNhanDto,
+    type: [ThuVienSachCaNhanDto],
     description: 'Get all ThuVienSachCaNhan',
   })
-  findAll() {
+  findAll(): Promise<ThuVienSachCaNhanDto[]> {
     return this.thuVienSachCaNhanService.findAll();
   }
 
   @Get(':id')
   @ApiOkResponse({
-    type: CreateThuVienSachCaNhanDto,
+    type: ThuVienSachCaNhanDto,
     description: 'Get one ThuVienSachCaNhan by id',
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<ThuVienSachCaNhanDto> {
     return this.thuVienSachCaNhanService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOkResponse({
-    type: CreateThuVienSachCaNhanDto,
+    type: ThuVienSachCaNhanDto,
     description: 'Update ThuVienSachCaNhan by id',
   })
   update(
     @Param('id') id: string,
     @Body() updateThuVienSachCaNhanDto: UpdateThuVienSachCaNhanDto,
-  ) {
+  ): Promise<ThuVienSachCaNhanDto> {
     return this.thuVienSachCaNhanService.update(id, updateThuVienSachCaNhanDto);
   }
 
   @Delete(':id')
   @ApiOkResponse({
-    type: CreateThuVienSachCaNhanDto,
+    type: Boolean,
     description: 'Delete ThuVienSachCaNhan by id',
   })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<boolean> {
     return this.thuVienSachCaNhanService.remove(id);
   }
 }

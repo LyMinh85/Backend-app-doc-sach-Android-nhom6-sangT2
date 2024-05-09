@@ -38,6 +38,7 @@ export class ThuVienSachCaNhanService {
     const id = ref.id;
     await ref.set({
       ...createThuVienSachCaNhanDto,
+      ngayThem: new Date(),
       id,
     });
 

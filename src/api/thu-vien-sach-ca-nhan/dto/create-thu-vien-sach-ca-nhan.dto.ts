@@ -8,8 +8,5 @@ export class CreateThuVienSachCaNhanDto {
   idSach: string;
 
   @ApiProperty()
-  ngayThem: Date;
-
-  @ApiProperty()
   sachYeuThich: boolean;
 }

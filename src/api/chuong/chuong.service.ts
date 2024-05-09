@@ -5,21 +5,43 @@ import { FirebaseRepository } from '../firebase/firebase.repository';
 import { FirebaseCollection } from '../firebase/firebase-collection.enum';
 import { CollectionReference, DocumentData } from 'firebase-admin/firestore';
 import { Chuong } from './entities/chuong.entity';
+import { FindChuongParams } from './params/find-chuong.params';
+import { SachService } from '../sach/sach.service';
 
 @Injectable()
 export class ChuongService {
   private chuongCollection: CollectionReference<DocumentData>;
-  constructor(private firebaseRepository: FirebaseRepository) {
+  constructor(
+    private firebaseRepository: FirebaseRepository,
+    private sachService: SachService,
+  ) {
     this.chuongCollection = this.firebaseRepository.getCollection(
       FirebaseCollection.Chuong,
     );
   }
 
+  // Convert a document data to Chuong entity include sach property
+  // by fetching sach document from firebase
+  // async convertToChuong(
+  //   doc: QueryDocumentSnapshot<DocumentData, DocumentData>,
+  // ): Chuong {
+  //   const chuong = new Chuong({ id: doc.id, ...doc.data() });
+  //   // Fetch sach document from firebase
+  //   const sach = await this.sachService.findOne(chuong.idSach);
+  //   chuong.sach = sach;
+  // }
+
   async create(createChuongDto: CreateChuongDto): Promise<Chuong> {
-    const ref = await this.chuongCollection.doc();
+    const ref = this.chuongCollection.doc();
+
+    // Get the last chuong of the sach
+    const lastChuong = await this.getFinalChuong(createChuongDto.idSach);
+    const soThuTu = lastChuong ? lastChuong.soThuTu + 1 : 1;
+
     const chuong = new Chuong({
       id: ref.id,
       ...createChuongDto,
+      soThuTu,
     });
     await ref.set({
       ...chuong,
@@ -27,14 +49,18 @@ export class ChuongService {
     return chuong;
   }
 
-  async findAll(): Promise<Chuong[]> {
-    const snapshot = await this.chuongCollection.get();
-    return snapshot.docs.map((doc) => {
-      return new Chuong({
-        id: doc.id,
-        ...doc.data(),
-      });
-    });
+  async find(findChuongParams: FindChuongParams): Promise<Chuong[]> {
+    const { idSach } = findChuongParams;
+    let query = this.firebaseRepository.getQuery(FirebaseCollection.Chuong);
+
+    if (idSach) {
+      query = query.where('idSach', '==', idSach);
+    }
+
+    const snapshot = await query.get();
+    return snapshot.docs.map(
+      (doc) => new Chuong({ id: doc.id, ...doc.data() }),
+    );
   }
 
   async findOne(id: string): Promise<Chuong> {
@@ -46,7 +72,7 @@ export class ChuongService {
   }
 
   async update(id: string, updateChuongDto: UpdateChuongDto): Promise<Chuong> {
-    await this.chuongCollection.doc(id).set({
+    await this.chuongCollection.doc(id).update({
       ...updateChuongDto,
     });
     return this.findOne(id);
@@ -59,5 +85,23 @@ export class ChuongService {
     } catch (error) {
       return false;
     }
+  }
+
+  async getFinalChuong(idSach: string): Promise<Chuong> {
+    let query = this.firebaseRepository.getQuery(FirebaseCollection.Chuong);
+    query = query
+      .where('idSach', '==', idSach)
+      .orderBy('soThuTu', 'desc')
+      .limit(1);
+    const snapshot = await query.get();
+    // Check if there is no chuong
+    if (snapshot.empty) {
+      return null;
+    }
+
+    return new Chuong({
+      id: snapshot.docs[0].id,
+      ...snapshot.docs[0].data(),
+    });
   }
 }

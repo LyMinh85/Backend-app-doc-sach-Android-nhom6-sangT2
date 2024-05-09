@@ -8,6 +8,7 @@ import { TheLoaiSachService } from '../the-loai-sach/the-loai-sach.service';
 import { FirebaseCollection } from '../firebase/firebase-collection.enum';
 import { TheLoaiSach } from '../the-loai-sach/entities/the-loai-sach.entity';
 import { SachDto } from './dto/sach.dto';
+import { FieldValue } from 'firebase-admin/firestore';
 
 @Injectable()
 export class SachService {
@@ -34,6 +35,7 @@ export class SachService {
       id: ref.id,
       ...createSachDto,
       ListTheLoaiRef: listTheLoaiRef,
+      tongSoLuotDoc: 0,
     });
     await ref.set({ ...sach });
     return sach;
@@ -119,5 +121,11 @@ export class SachService {
     } catch (error) {
       return false;
     }
+  }
+
+  async increaseLuotDoc(id: string): Promise<void> {
+    await this.sachCollection.doc(id).update({
+      tongSoLuotDoc: FieldValue.increment(1),
+    });
   }
 }

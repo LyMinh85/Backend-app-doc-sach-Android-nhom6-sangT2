@@ -7,6 +7,7 @@ import { FirebaseModule } from './api/firebase/firebase.module';
 import { SachModule } from './api/sach/sach.module';
 import { TheLoaiSachModule } from './api/the-loai-sach/the-loai-sach.module';
 import { ChuongModule } from './api/chuong/chuong.module';
+import { LuotDocModule } from './api/luot-doc/luot-doc.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ChuongModule } from './api/chuong/chuong.module';
     SachModule,
     TheLoaiSachModule,
     ChuongModule,
+    LuotDocModule,
   ],
   controllers: [AppController],
   providers: [AppService],

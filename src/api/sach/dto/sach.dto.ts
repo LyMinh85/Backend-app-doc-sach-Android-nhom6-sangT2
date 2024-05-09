@@ -10,6 +10,7 @@ interface ISachDto {
   NamXuatBan?: number;
   Mota?: string;
   ListTheLoai?: TheLoaiSach[];
+  tongSoLuotDoc?: number;
 }
 
 export class SachDto implements ISachDto {
@@ -34,6 +35,9 @@ export class SachDto implements ISachDto {
   @ApiProperty()
   ListTheLoai: TheLoaiSach[];
 
+  @ApiProperty()
+  tongSoLuotDoc: number;
+
   constructor(source: ISachDto) {
     this.id = source.id;
     this.img = source.img;
@@ -42,5 +46,6 @@ export class SachDto implements ISachDto {
     this.NamXuatBan = source.NamXuatBan;
     this.Mota = source.Mota;
     this.ListTheLoai = source.ListTheLoai;
+    this.tongSoLuotDoc = source.tongSoLuotDoc;
   }
 }

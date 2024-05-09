@@ -3,4 +3,5 @@ export enum FirebaseCollection {
   NguoiDung = 'NguoiDung',
   TheLoai = 'TheLoaiSach',
   Chuong = 'Chuong',
+  LuotDoc = 'LuotDoc',
 }

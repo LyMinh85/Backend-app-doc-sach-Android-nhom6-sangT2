@@ -7,5 +7,6 @@ import { FirebaseModule } from '../firebase/firebase.module';
   imports: [FirebaseModule],
   controllers: [SachController],
   providers: [SachService],
+  exports: [SachService],
 })
 export class SachModule {}

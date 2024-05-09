@@ -7,5 +7,6 @@ import { FirebaseModule } from '../firebase/firebase.module';
   imports: [FirebaseModule],
   controllers: [NguoiDungController],
   providers: [NguoiDungService],
+  exports: [NguoiDungService],
 })
 export class NguoiDungModule {}

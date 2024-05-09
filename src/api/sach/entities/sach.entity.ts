@@ -21,6 +21,9 @@ export class Sach {
   Mota: string;
 
   @ApiProperty()
+  tongSoLuotDoc: number;
+
+  @ApiProperty()
   ListTheLoaiRef: FirebaseFirestore.DocumentReference<
     FirebaseFirestore.DocumentData,
     FirebaseFirestore.DocumentData

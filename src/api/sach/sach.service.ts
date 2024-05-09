@@ -36,6 +36,7 @@ export class SachService {
       ...createSachDto,
       ListTheLoaiRef: listTheLoaiRef,
       tongSoLuotDoc: 0,
+      tongSoDanhGia: 0,
     });
     await ref.set({ ...sach });
     return sach;
@@ -123,9 +124,15 @@ export class SachService {
     }
   }
 
-  async increaseLuotDoc(id: string): Promise<void> {
-    await this.sachCollection.doc(id).update({
+  async increaseLuotDoc(idSach: string): Promise<void> {
+    await this.sachCollection.doc(idSach).update({
       tongSoLuotDoc: FieldValue.increment(1),
+    });
+  }
+
+  async increaseDanhGia(idSach: string, value: number): Promise<void> {
+    await this.sachCollection.doc(idSach).update({
+      tongSoDanhGia: FieldValue.increment(value),
     });
   }
 }

@@ -24,6 +24,9 @@ export class Sach {
   tongSoLuotDoc: number;
 
   @ApiProperty()
+  tongSoDanhGia: number;
+
+  @ApiProperty()
   ListTheLoaiRef: FirebaseFirestore.DocumentReference<
     FirebaseFirestore.DocumentData,
     FirebaseFirestore.DocumentData

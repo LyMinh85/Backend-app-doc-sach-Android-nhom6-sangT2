@@ -8,6 +8,7 @@ import { SachModule } from './api/sach/sach.module';
 import { TheLoaiSachModule } from './api/the-loai-sach/the-loai-sach.module';
 import { ChuongModule } from './api/chuong/chuong.module';
 import { LuotDocModule } from './api/luot-doc/luot-doc.module';
+import { DanhGiaModule } from './api/danh-gia/danh-gia.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LuotDocModule } from './api/luot-doc/luot-doc.module';
     TheLoaiSachModule,
     ChuongModule,
     LuotDocModule,
+    DanhGiaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

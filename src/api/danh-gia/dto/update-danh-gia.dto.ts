@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateDanhGiaDto } from './create-danh-gia.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, Max, Min } from 'class-validator';
 
-export class UpdateDanhGiaDto extends PartialType(CreateDanhGiaDto) {}
+export class UpdateDanhGiaDto {
+  @ApiProperty()
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  diem: number;
+
+  @ApiProperty()
+  noiDung: string;
+}

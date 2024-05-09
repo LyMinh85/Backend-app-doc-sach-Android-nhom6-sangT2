@@ -5,4 +5,5 @@ export enum FirebaseCollection {
   Chuong = 'Chuong',
   LuotDoc = 'LuotDoc',
   DanhGia = 'DanhGia',
+  ThuVienSachCaNhan = 'ThuVienSachCaNhan',
 }

@@ -9,6 +9,7 @@ import { TheLoaiSachModule } from './api/the-loai-sach/the-loai-sach.module';
 import { ChuongModule } from './api/chuong/chuong.module';
 import { LuotDocModule } from './api/luot-doc/luot-doc.module';
 import { DanhGiaModule } from './api/danh-gia/danh-gia.module';
+import { ThuVienSachCaNhanModule } from './api/thu-vien-sach-ca-nhan/thu-vien-sach-ca-nhan.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DanhGiaModule } from './api/danh-gia/danh-gia.module';
     ChuongModule,
     LuotDocModule,
     DanhGiaModule,
+    ThuVienSachCaNhanModule,
   ],
   controllers: [AppController],
   providers: [AppService],

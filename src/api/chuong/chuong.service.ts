@@ -11,10 +11,7 @@ import { SachService } from '../sach/sach.service';
 @Injectable()
 export class ChuongService {
   private chuongCollection: CollectionReference<DocumentData>;
-  constructor(
-    private firebaseRepository: FirebaseRepository,
-    private sachService: SachService,
-  ) {
+  constructor(private firebaseRepository: FirebaseRepository) {
     this.chuongCollection = this.firebaseRepository.getCollection(
       FirebaseCollection.Chuong,
     );
@@ -31,15 +28,19 @@ export class ChuongService {
   //   chuong.sach = sach;
   // }
 
-  async create(createChuongDto: CreateChuongDto): Promise<Chuong> {
+  async create(
+    idSach: string,
+    createChuongDto: CreateChuongDto,
+  ): Promise<Chuong> {
     const ref = this.chuongCollection.doc();
 
     // Get the last chuong of the sach
-    const lastChuong = await this.getFinalChuong(createChuongDto.idSach);
+    const lastChuong = await this.getFinalChuong(idSach);
     const soThuTu = lastChuong ? lastChuong.soThuTu + 1 : 1;
 
     const chuong = new Chuong({
       id: ref.id,
+      idSach,
       ...createChuongDto,
       soThuTu,
     });

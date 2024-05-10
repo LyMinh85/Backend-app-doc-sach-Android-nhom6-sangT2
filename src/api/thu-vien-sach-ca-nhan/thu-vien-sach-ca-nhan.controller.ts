@@ -19,53 +19,53 @@ export class ThuVienSachCaNhanController {
     private readonly thuVienSachCaNhanService: ThuVienSachCaNhanService,
   ) {}
 
-  @Post()
-  @ApiCreatedResponse({
-    type: ThuVienSachCaNhanDto,
-    description: 'Create ThuVienSachCaNhan',
-  })
-  create(
-    @Body() createThuVienSachCaNhanDto: CreateThuVienSachCaNhanDto,
-  ): Promise<ThuVienSachCaNhanDto> {
-    return this.thuVienSachCaNhanService.create(createThuVienSachCaNhanDto);
-  }
+  // @Post()
+  // @ApiCreatedResponse({
+  //   type: ThuVienSachCaNhanDto,
+  //   description: 'Create ThuVienSachCaNhan',
+  // })
+  // create(
+  //   @Body() createThuVienSachCaNhanDto: CreateThuVienSachCaNhanDto,
+  // ): Promise<ThuVienSachCaNhanDto> {
+  //   return this.thuVienSachCaNhanService.create(createThuVienSachCaNhanDto);
+  // }
 
-  @Get()
-  @ApiOkResponse({
-    type: [ThuVienSachCaNhanDto],
-    description: 'Get all ThuVienSachCaNhan',
-  })
-  findAll(): Promise<ThuVienSachCaNhanDto[]> {
-    return this.thuVienSachCaNhanService.findAll();
-  }
+  // @Get()
+  // @ApiOkResponse({
+  //   type: [ThuVienSachCaNhanDto],
+  //   description: 'Get all ThuVienSachCaNhan',
+  // })
+  // findAll(): Promise<ThuVienSachCaNhanDto[]> {
+  //   return this.thuVienSachCaNhanService.findAll();
+  // }
 
-  @Get(':id')
-  @ApiOkResponse({
-    type: ThuVienSachCaNhanDto,
-    description: 'Get one ThuVienSachCaNhan by id',
-  })
-  findOne(@Param('id') id: string): Promise<ThuVienSachCaNhanDto> {
-    return this.thuVienSachCaNhanService.findOne(id);
-  }
+  // @Get(':id')
+  // @ApiOkResponse({
+  //   type: ThuVienSachCaNhanDto,
+  //   description: 'Get one ThuVienSachCaNhan by id',
+  // })
+  // findOne(@Param('id') id: string): Promise<ThuVienSachCaNhanDto> {
+  //   return this.thuVienSachCaNhanService.findOne(id);
+  // }
 
-  @Patch(':id')
-  @ApiOkResponse({
-    type: ThuVienSachCaNhanDto,
-    description: 'Update ThuVienSachCaNhan by id',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() updateThuVienSachCaNhanDto: UpdateThuVienSachCaNhanDto,
-  ): Promise<ThuVienSachCaNhanDto> {
-    return this.thuVienSachCaNhanService.update(id, updateThuVienSachCaNhanDto);
-  }
+  // @Patch(':id')
+  // @ApiOkResponse({
+  //   type: ThuVienSachCaNhanDto,
+  //   description: 'Update ThuVienSachCaNhan by id',
+  // })
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateThuVienSachCaNhanDto: UpdateThuVienSachCaNhanDto,
+  // ): Promise<ThuVienSachCaNhanDto> {
+  //   return this.thuVienSachCaNhanService.update(id, updateThuVienSachCaNhanDto);
+  // }
 
-  @Delete(':id')
-  @ApiOkResponse({
-    type: Boolean,
-    description: 'Delete ThuVienSachCaNhan by id',
-  })
-  remove(@Param('id') id: string): Promise<boolean> {
-    return this.thuVienSachCaNhanService.remove(id);
-  }
+  // @Delete(':id')
+  // @ApiOkResponse({
+  //   type: Boolean,
+  //   description: 'Delete ThuVienSachCaNhan by id',
+  // })
+  // remove(@Param('id') id: string): Promise<boolean> {
+  //   return this.thuVienSachCaNhanService.remove(id);
+  // }
 }

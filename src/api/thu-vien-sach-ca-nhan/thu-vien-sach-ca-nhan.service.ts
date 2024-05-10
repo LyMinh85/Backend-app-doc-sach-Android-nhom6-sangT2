@@ -14,7 +14,6 @@ export class ThuVienSachCaNhanService {
   constructor(
     private firebaseRepository: FirebaseRepository,
     private sachService: SachService,
-    private nguoiDungService: NguoiDungService,
   ) {
     this.thuVienSachCaNhanColletion = this.firebaseRepository.getCollection(
       FirebaseCollection.ThuVienSachCaNhan,
@@ -32,18 +31,20 @@ export class ThuVienSachCaNhanService {
   }
 
   async create(
+    idNguoiDung: string,
+    idSach: string,
     createThuVienSachCaNhanDto: CreateThuVienSachCaNhanDto,
   ): Promise<ThuVienSachCaNhanDto> {
     const thuVienSachCaNhan = await this.findByIdSachAndIdNguoiDung(
-      createThuVienSachCaNhanDto.idSach,
-      createThuVienSachCaNhanDto.idNguoiDung,
+      idSach,
+      idNguoiDung,
     );
 
     // if exist do not create
     // show error message
     if (thuVienSachCaNhan) {
       throw new BadRequestException(
-        `ThuVienSachCaNhan with idSach ${createThuVienSachCaNhanDto.idSach} and idNguoiDung ${createThuVienSachCaNhanDto.idNguoiDung} already`,
+        `ThuVienSachCaNhan with idSach ${idSach} and idNguoiDung ${idNguoiDung} already`,
       );
     }
 
@@ -51,6 +52,8 @@ export class ThuVienSachCaNhanService {
     const id = ref.id;
     await ref.set({
       ...createThuVienSachCaNhanDto,
+      idNguoiDung,
+      idSach,
       ngayThem: new Date(),
       id,
     });
@@ -73,6 +76,17 @@ export class ThuVienSachCaNhanService {
     return this.toThuVienSachCaNhanDto(doc.data());
   }
 
+  async findByIdNguoiDung(
+    idNguoiDung: string,
+  ): Promise<ThuVienSachCaNhanDto[]> {
+    const snapshot = await this.thuVienSachCaNhanColletion
+      .where('idNguoiDung', '==', idNguoiDung)
+      .get();
+    return Promise.all(
+      snapshot.docs.map((doc) => this.toThuVienSachCaNhanDto(doc.data())),
+    );
+  }
+
   async findByIdSachAndIdNguoiDung(
     idSach: string,
     idNguoiDung: string,
@@ -88,13 +102,19 @@ export class ThuVienSachCaNhanService {
   }
 
   async update(
-    id: string,
+    idNguoiDung: string,
+    idSach: string,
     updateThuVienSachCaNhanDto: UpdateThuVienSachCaNhanDto,
   ): Promise<ThuVienSachCaNhanDto> {
-    await this.thuVienSachCaNhanColletion.doc(id).update({
+    const thuVienSachCaNhan = await this.findByIdSachAndIdNguoiDung(
+      idSach,
+      idNguoiDung,
+    );
+
+    await this.thuVienSachCaNhanColletion.doc(thuVienSachCaNhan.id).update({
       ...updateThuVienSachCaNhanDto,
     });
-    return this.findOne(id);
+    return this.findOne(thuVienSachCaNhan.id);
   }
 
   async remove(id: string): Promise<boolean> {
@@ -104,5 +124,19 @@ export class ThuVienSachCaNhanService {
     } catch (error) {
       return false;
     }
+  }
+
+  async removeByIdSachAndIdNguoiDung(
+    idSach: string,
+    idNguoiDung: string,
+  ): Promise<boolean> {
+    const thuVienSachCaNhan = await this.findByIdSachAndIdNguoiDung(
+      idSach,
+      idNguoiDung,
+    );
+    if (!thuVienSachCaNhan) {
+      return false;
+    }
+    return await this.remove(thuVienSachCaNhan.id);
   }
 }

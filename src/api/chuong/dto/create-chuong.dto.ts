@@ -9,8 +9,4 @@ export class CreateChuongDto {
   @ApiProperty()
   @IsString()
   TenChuong: string;
-
-  @ApiProperty()
-  @IsString()
-  idSach: string;
 }

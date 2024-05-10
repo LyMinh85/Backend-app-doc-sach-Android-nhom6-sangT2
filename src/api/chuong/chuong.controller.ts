@@ -19,25 +19,25 @@ import { FindChuongParams } from './params/find-chuong.params';
 export class ChuongController {
   constructor(private readonly chuongService: ChuongService) {}
 
-  @Post()
-  @ApiCreatedResponse({
-    description: 'The record has been successfully created.',
-    type: Chuong,
-  })
-  async create(@Body() createChuongDto: CreateChuongDto) {
-    return this.chuongService.create(createChuongDto);
-  }
+  // @Post()
+  // @ApiCreatedResponse({
+  //   description: 'The record has been successfully created.',
+  //   type: Chuong,
+  // })
+  // async create(@Body() createChuongDto: CreateChuongDto) {
+  //   return this.chuongService.create(createChuongDto);
+  // }
 
-  // find all chuong by idSach
-  @Get()
-  @ApiOkResponse({
-    description: 'Records have been successfully retrieved.',
-    type: [Chuong],
-  })
-  @ApiQuery({ name: 'idSach', required: false })
-  async find(@Query() findChuongParams: FindChuongParams) {
-    return this.chuongService.find(findChuongParams);
-  }
+  // // find all chuong by idSach
+  // @Get()
+  // @ApiOkResponse({
+  //   description: 'Records have been successfully retrieved.',
+  //   type: [Chuong],
+  // })
+  // @ApiQuery({ name: 'idSach', required: false })
+  // async find(@Query() findChuongParams: FindChuongParams) {
+  //   return this.chuongService.find(findChuongParams);
+  // }
 
   @Get(':id')
   @ApiOkResponse({
@@ -62,12 +62,12 @@ export class ChuongController {
     return this.chuongService.remove(id);
   }
 
-  @Get('final-chuong/:idSach')
-  @ApiOkResponse({
-    description: 'Record has been successfully retrieved.',
-    type: Chuong,
-  })
-  async getFinalChuong(@Param('idSach') idSach: string): Promise<Chuong> {
-    return await this.chuongService.getFinalChuong(idSach);
-  }
+  // @Get('final-chuong/:idSach')
+  // @ApiOkResponse({
+  //   description: 'Record has been successfully retrieved.',
+  //   type: Chuong,
+  // })
+  // async getFinalChuong(@Param('idSach') idSach: string): Promise<Chuong> {
+  //   return await this.chuongService.getFinalChuong(idSach);
+  // }
 }

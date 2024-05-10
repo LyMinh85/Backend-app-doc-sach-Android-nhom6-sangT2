@@ -6,8 +6,9 @@ import { SachModule } from '../sach/sach.module';
 import { NguoiDungModule } from '../nguoi-dung/nguoi-dung.module';
 
 @Module({
-  imports: [FirebaseModule, SachModule, NguoiDungModule],
+  imports: [FirebaseModule, SachModule],
   controllers: [LichSuCaNhanController],
   providers: [LichSuCaNhanService],
+  exports: [LichSuCaNhanService],
 })
 export class LichSuCaNhanModule {}

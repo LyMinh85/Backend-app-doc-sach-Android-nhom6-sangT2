@@ -14,7 +14,6 @@ export class LichSuCaNhanService {
   constructor(
     private firebaseRepository: FirebaseRepository,
     private sachService: SachService,
-    private nguoiDungService: NguoiDungService,
   ) {
     this.lichSuCaNhanColletion = this.firebaseRepository.getCollection(
       FirebaseCollection.LichSuCaNhan,

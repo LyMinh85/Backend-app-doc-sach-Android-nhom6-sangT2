@@ -13,7 +13,12 @@ import {
 import { ChuongService } from './chuong.service';
 import { CreateChuongDto } from './dto/create-chuong.dto';
 import { UpdateChuongDto } from './dto/update-chuong.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { Chuong } from './entities/chuong.entity';
 import { FindChuongParams } from './params/find-chuong.params';
 import { DanhDauChuongService } from '../danh-dau-chuong/danh-dau-chuong.service';
@@ -49,6 +54,7 @@ export class ChuongController {
   // }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Lấy thông tin chương theo id' })
   @ApiOkResponse({
     description: 'Record has been successfully retrieved.',
     type: Chuong,
@@ -58,6 +64,7 @@ export class ChuongController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Cập nhật thông tin chương' })
   @ApiOkResponse({
     description: 'Record has been successfully updated.',
     type: Chuong,
@@ -67,6 +74,7 @@ export class ChuongController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Xóa chương' })
   remove(@Param('id') id: string) {
     return this.chuongService.remove(id);
   }
@@ -81,6 +89,7 @@ export class ChuongController {
   // }
 
   @Post(':idChuong/danh-dau/:idNguoiDung')
+  @ApiOperation({ summary: 'Đánh dấu chương' })
   @ApiCreatedResponse({
     description: 'Đánh dấu chương thành công.',
     type: DanhDauChuong,
@@ -93,6 +102,7 @@ export class ChuongController {
   }
 
   @Delete(':idChuong/danh-dau/:idNguoiDung')
+  @ApiOperation({ summary: 'Bỏ đánh dấu chương' })
   @ApiOkResponse({
     description: 'Bỏ đánh dấu chương thành công.',
     type: DanhDauChuong,

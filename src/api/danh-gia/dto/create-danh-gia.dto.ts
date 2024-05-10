@@ -6,9 +6,6 @@ export class CreateDanhGiaDto {
   idNguoiDung: string;
 
   @ApiProperty()
-  idSach: string;
-
-  @ApiProperty()
   @IsNumber()
   @Min(1)
   @Max(5)

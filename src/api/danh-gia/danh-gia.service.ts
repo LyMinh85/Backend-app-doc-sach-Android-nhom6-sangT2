@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDanhGiaDto } from './dto/create-danh-gia.dto';
 import { UpdateDanhGiaDto } from './dto/update-danh-gia.dto';
 import { FirebaseRepository } from '../firebase/firebase.repository';
@@ -18,7 +18,7 @@ export class DanhGiaService {
   private danhGiaCollection: CollectionReference<DocumentData>;
   constructor(
     private firebaseRepository: FirebaseRepository,
-    private sachService: SachService,
+    @Inject(forwardRef(() => NguoiDungService))
     private nguoiDungService: NguoiDungService,
   ) {
     this.danhGiaCollection = this.firebaseRepository.getCollection(
@@ -38,18 +38,19 @@ export class DanhGiaService {
     });
   }
 
-  async create(createDanhGiaDto: CreateDanhGiaDto): Promise<DanhGiaDto> {
+  async create(
+    idSach: string,
+    createDanhGiaDto: CreateDanhGiaDto,
+  ): Promise<DanhGiaDto> {
     // Create danhGia
     const ref = this.danhGiaCollection.doc();
     const danhGia: DanhGia = {
       id: ref.id,
+      idSach,
       ...createDanhGiaDto,
       ngayTao: new Date(),
     };
     const doc = await ref.set(danhGia);
-
-    // Increase danhGia count of sach
-    await this.sachService.increaseDanhGia(createDanhGiaDto.idSach, 1);
 
     return this.findOne(ref.id);
   }
@@ -69,6 +70,15 @@ export class DanhGiaService {
     return this.docToDanhGiaDto(doc);
   }
 
+  async findDanhGiaByIdSach(idSach: string): Promise<DanhGiaDto[]> {
+    const snapshot = await this.danhGiaCollection
+      .where('idSach', '==', idSach)
+      .get();
+    return Promise.all(
+      snapshot.docs.map(async (doc) => this.docToDanhGiaDto(doc)),
+    );
+  }
+
   async update(
     id: string,
     updateDanhGiaDto: UpdateDanhGiaDto,
@@ -83,7 +93,7 @@ export class DanhGiaService {
     try {
       const danhGia = await this.findOne(id);
       await this.danhGiaCollection.doc(id).delete();
-      await this.sachService.increaseDanhGia(danhGia.idSach, -1);
+      // await this.sachService.increaseDanhGia(danhGia.idSach, -1);
       return true;
     } catch (error) {
       console.log(error);

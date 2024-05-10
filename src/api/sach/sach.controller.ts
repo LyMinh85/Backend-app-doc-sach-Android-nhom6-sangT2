@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  forwardRef,
+  Inject,
 } from '@nestjs/common';
 import { SachService } from './sach.service';
 import { CreateSachDto } from './dto/create-sach.dto';
@@ -15,12 +17,24 @@ import { SachQueryParams } from './interface/sach-query-params.interface';
 import { ApiQuery } from '@nestjs/swagger';
 import { ChuongService } from '../chuong/chuong.service';
 import { CreateChuongDto } from '../chuong/dto/create-chuong.dto';
+import { DanhGiaService } from '../danh-gia/danh-gia.service';
+import { CreateDanhGiaDto } from '../danh-gia/dto/create-danh-gia.dto';
+import { LuotDocService } from '../luot-doc/luot-doc.service';
 
 @Controller('api/sach')
 export class SachController {
   constructor(
+    @Inject(forwardRef(() => SachService))
     private readonly sachService: SachService,
+
+    @Inject(forwardRef(() => ChuongService))
     private readonly chuongService: ChuongService,
+
+    @Inject(forwardRef(() => DanhGiaService))
+    private readonly danhGiaService: DanhGiaService,
+
+    @Inject(forwardRef(() => LuotDocService))
+    private readonly luotDocService: LuotDocService,
   ) {}
 
   @Post()
@@ -50,6 +64,7 @@ export class SachController {
     return await this.sachService.remove(id);
   }
 
+  // Các API liên quan đến chương
   @Get(':idSach/chuong')
   async findAllChuong(@Param('idSach') idSach: string) {
     return await this.chuongService.find({ idSach });
@@ -66,5 +81,37 @@ export class SachController {
   @Get(':idSach/chuong/final')
   async getFinalChuong(@Param('idSach') idSach: string) {
     return await this.chuongService.getFinalChuong(idSach);
+  }
+
+  // Các API liên quan đến đánh giá
+  @Get(':idSach/danh-gia')
+  async findAllDanhGia(@Param('idSach') idSach: string) {
+    return await this.danhGiaService.findDanhGiaByIdSach(idSach);
+  }
+
+  @Post(':idSach/danh-gia')
+  async createDanhGia(
+    @Param('idSach') idSach: string,
+    @Body() createDanhGiaDto: CreateDanhGiaDto,
+  ) {
+    const danhGia = await this.danhGiaService.create(idSach, createDanhGiaDto);
+    // Increase danhGia count of sach
+    await this.sachService.increaseDanhGia(idSach, 1);
+
+    return danhGia;
+  }
+
+  // Các API liên quan đến lượt đọc
+  @Get(':idSach/luot-doc')
+  async findAllLuotDoc(@Param('idSach') idSach: string) {
+    return await this.luotDocService.findByIdSach(idSach);
+  }
+
+  @Post(':idSach/luot-doc/:idNguoiDung')
+  async createLuotDoc(
+    @Param('idSach') idSach: string,
+    @Param('idNguoiDung') idNguoiDung: string,
+  ) {
+    return await this.luotDocService.create({ idSach, idNguoiDung });
   }
 }

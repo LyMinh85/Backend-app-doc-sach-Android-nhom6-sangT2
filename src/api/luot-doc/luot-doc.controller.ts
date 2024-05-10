@@ -18,30 +18,30 @@ import { LuotDocDTO } from './dto/luot-doc.dto';
 export class LuotDocController {
   constructor(private readonly luotDocService: LuotDocService) {}
 
-  @Post()
-  @ApiCreatedResponse({
-    description: 'The record has been successfully created.',
-    type: LuotDoc,
-  })
-  create(@Body() createLuotDocDto: CreateLuotDocDto): Promise<LuotDoc> {
-    return this.luotDocService.create(createLuotDocDto);
-  }
+  // @Post()
+  // @ApiCreatedResponse({
+  //   description: 'The record has been successfully created.',
+  //   type: LuotDoc,
+  // })
+  // create(@Body() createLuotDocDto: CreateLuotDocDto): Promise<LuotDoc> {
+  //   return this.luotDocService.create(createLuotDocDto);
+  // }
 
-  @Get()
-  @ApiOkResponse({
-    description: 'Records have been successfully retrieved.',
-    type: [LuotDocDTO],
-  })
-  findAll(): Promise<LuotDocDTO[]> {
-    return this.luotDocService.findAll();
-  }
+  // @Get()
+  // @ApiOkResponse({
+  //   description: 'Records have been successfully retrieved.',
+  //   type: [LuotDocDTO],
+  // })
+  // findAll(): Promise<LuotDocDTO[]> {
+  //   return this.luotDocService.findAll();
+  // }
 
   @Get(':id')
   @ApiOkResponse({
     description: 'Record has been successfully retrieved.',
-    type: LuotDocDTO,
+    type: LuotDoc,
   })
-  findOne(@Param('id') id: string): Promise<LuotDocDTO> {
+  findOne(@Param('id') id: string): Promise<LuotDoc> {
     return this.luotDocService.findOne(id);
   }
 

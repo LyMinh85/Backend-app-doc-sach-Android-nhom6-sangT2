@@ -28,7 +28,7 @@ export class LuotDocService {
 
   // convert a document data to LuotDoc entity
   // also fetch the id of sach and nguoi dung
-  async toNguoiDocDTO(
+  async toLuotDocDTO(
     doc: DocumentSnapshot<DocumentData, DocumentData>,
   ): Promise<LuotDocDTO> {
     const sachDto = await this.sachService.findOne(doc.data().idSach);
@@ -49,6 +49,14 @@ export class LuotDocService {
       idNguoiDung: luotDocDTO.nguoiDung.id,
     });
     return luotDoc;
+  }
+
+  docToLuotDoc(doc: DocumentSnapshot<DocumentData, DocumentData>): LuotDoc {
+    return new LuotDoc({
+      id: doc.id,
+      idSach: doc.data().idSach,
+      idNguoiDung: doc.data().idNguoiDung,
+    });
   }
 
   async create(createLuotDocDto: CreateLuotDocDto): Promise<LuotDoc> {
@@ -76,15 +84,15 @@ export class LuotDocService {
     return luotDoc;
   }
 
-  async findAll(): Promise<LuotDocDTO[]> {
+  async findAll(): Promise<LuotDoc[]> {
     const snapshot = await this.luotDocCollection.get();
-    const luotDocs = snapshot.docs.map((doc) => this.toNguoiDocDTO(doc));
+    const luotDocs = snapshot.docs.map((doc) => this.docToLuotDoc(doc));
     return Promise.all(luotDocs);
   }
 
-  async findOne(id: string): Promise<LuotDocDTO> {
+  async findOne(id: string): Promise<LuotDoc> {
     const doc = await this.luotDocCollection.doc(id).get();
-    return this.toNguoiDocDTO(doc);
+    return this.docToLuotDoc(doc);
   }
 
   // find by sachId and nguoiDungId
@@ -100,13 +108,21 @@ export class LuotDocService {
     if (snapshot.empty) {
       return null;
     }
-    return this.toNguoiDocDTO(snapshot.docs[0]);
+    return this.toLuotDocDTO(snapshot.docs[0]);
+  }
+
+  async findByIdSach(idSach: string): Promise<LuotDoc[]> {
+    const snapshot = await this.luotDocCollection
+      .where('idSach', '==', idSach)
+      .get();
+    const luotDocs = snapshot.docs.map((doc) => this.docToLuotDoc(doc));
+    return Promise.all(luotDocs);
   }
 
   async update(
     id: string,
     updateLuotDocDto: UpdateLuotDocDto,
-  ): Promise<LuotDocDTO> {
+  ): Promise<LuotDoc> {
     const ref = this.luotDocCollection.doc(id);
     await ref.update({ ...updateLuotDocDto });
     return await this.findOne(id);

@@ -17,24 +17,24 @@ import { DanhGiaDto } from './dto/danh-gia.dto';
 export class DanhGiaController {
   constructor(private readonly danhGiaService: DanhGiaService) {}
 
-  @Post()
-  @ApiCreatedResponse({
-    description: 'The record has been successfully created.',
-    type: DanhGiaDto,
-  })
-  create(@Body() createDanhGiaDto: CreateDanhGiaDto): Promise<DanhGiaDto> {
-    return this.danhGiaService.create(createDanhGiaDto);
-  }
+  // @Post()
+  // @ApiCreatedResponse({
+  //   description: 'The record has been successfully created.',
+  //   type: DanhGiaDto,
+  // })
+  // create(@Body() createDanhGiaDto: CreateDanhGiaDto): Promise<DanhGiaDto> {
+  //   return this.danhGiaService.create(createDanhGiaDto);
+  // }
 
-  @Get()
-  @ApiOkResponse({
-    type: DanhGiaDto,
-    isArray: true,
-    description: 'Records have been successfully retrieved.',
-  })
-  findAll(): Promise<DanhGiaDto[]> {
-    return this.danhGiaService.findAll();
-  }
+  // @Get()
+  // @ApiOkResponse({
+  //   type: DanhGiaDto,
+  //   isArray: true,
+  //   description: 'Records have been successfully retrieved.',
+  // })
+  // findAll(): Promise<DanhGiaDto[]> {
+  //   return this.danhGiaService.findAll();
+  // }
 
   @Get(':id')
   @ApiOkResponse({

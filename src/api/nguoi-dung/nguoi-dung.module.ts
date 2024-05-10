@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { NguoiDungService } from './nguoi-dung.service';
 import { NguoiDungController } from './nguoi-dung.controller';
 import { FirebaseModule } from '../firebase/firebase.module';
@@ -6,7 +6,11 @@ import { ThuVienSachCaNhanModule } from '../thu-vien-sach-ca-nhan/thu-vien-sach-
 import { LichSuCaNhanModule } from '../lich-su-ca-nhan/lich-su-ca-nhan.module';
 
 @Module({
-  imports: [FirebaseModule, ThuVienSachCaNhanModule, LichSuCaNhanModule],
+  imports: [
+    FirebaseModule,
+    forwardRef(() => ThuVienSachCaNhanModule),
+    forwardRef(() => LichSuCaNhanModule),
+  ],
   controllers: [NguoiDungController],
   providers: [NguoiDungService],
   exports: [NguoiDungService],

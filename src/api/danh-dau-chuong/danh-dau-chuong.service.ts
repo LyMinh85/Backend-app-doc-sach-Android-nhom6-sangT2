@@ -73,7 +73,7 @@ export class DanhDauChuongService {
         .where('idChuong', '==', idChuong)
         .where('idNguoiDung', '==', idNguoiDung)
         .get();
-      await snapshot.docs[0].ref.delete();
+      await this.danhDauChuongCollection.doc(snapshot.docs[0].id).delete();
       return true;
     }
     return false;

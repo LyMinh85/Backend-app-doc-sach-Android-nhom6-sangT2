@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateChuongDto } from './dto/create-chuong.dto';
 import { UpdateChuongDto } from './dto/update-chuong.dto';
 import { FirebaseRepository } from '../firebase/firebase.repository';
@@ -7,11 +7,18 @@ import { CollectionReference, DocumentData } from 'firebase-admin/firestore';
 import { Chuong } from './entities/chuong.entity';
 import { FindChuongParams } from './params/find-chuong.params';
 import { SachService } from '../sach/sach.service';
+import { DanhDauChuongService } from '../danh-dau-chuong/danh-dau-chuong.service';
+import { ChuongDto } from './dto/chuong.dto';
 
 @Injectable()
 export class ChuongService {
   private chuongCollection: CollectionReference<DocumentData>;
-  constructor(private firebaseRepository: FirebaseRepository) {
+  constructor(
+    private firebaseRepository: FirebaseRepository,
+
+    @Inject(forwardRef(() => DanhDauChuongService))
+    private danhDauChuongService: DanhDauChuongService,
+  ) {
     this.chuongCollection = this.firebaseRepository.getCollection(
       FirebaseCollection.Chuong,
     );
@@ -50,8 +57,7 @@ export class ChuongService {
     return chuong;
   }
 
-  async find(findChuongParams: FindChuongParams): Promise<Chuong[]> {
-    const { idSach } = findChuongParams;
+  async find(idSach: string, idNguoiDung: string): Promise<ChuongDto[]> {
     let query = this.firebaseRepository.getQuery(FirebaseCollection.Chuong);
 
     if (idSach) {
@@ -59,8 +65,20 @@ export class ChuongService {
     }
 
     const snapshot = await query.get();
-    return snapshot.docs.map(
-      (doc) => new Chuong({ id: doc.id, ...doc.data() }),
+
+    return Promise.all(
+      snapshot.docs.map(async (doc) => {
+        const chuong = new ChuongDto({ id: doc.id, ...doc.data() });
+
+        // Check if the chuong is danh dau
+        if (idNguoiDung) {
+          chuong.isDanhDau = await this.danhDauChuongService.isDanhDau(
+            chuong.id,
+            idNguoiDung,
+          );
+        }
+        return chuong;
+      }),
     );
   }
 

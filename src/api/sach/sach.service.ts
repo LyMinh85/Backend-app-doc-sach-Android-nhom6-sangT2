@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSachDto } from './dto/create-sach.dto';
 import { UpdateSachDto } from './dto/update-sach.dto';
 import { FirebaseRepository } from '../firebase/firebase.repository';
@@ -79,6 +79,11 @@ export class SachService {
 
   async findOne(id: string): Promise<SachDto> {
     const snapshot = await this.sachCollection.doc(id).get();
+
+    if (!snapshot.exists) {
+      throw new NotFoundException(`Sach with id ${id} not found`);
+    }
+
     const sachDto: SachDto = new SachDto({
       id: snapshot.id,
       ...snapshot.data(),
@@ -99,6 +104,8 @@ export class SachService {
   }
 
   async update(id: string, updateSachDto: UpdateSachDto): Promise<SachDto> {
+    await this.findOne(id);
+
     const ref = this.sachCollection.doc(id);
     const ListTheLoaiId = updateSachDto.ListTheLoaiId;
     let listTheLoaiRef = undefined;
@@ -116,12 +123,10 @@ export class SachService {
   }
 
   async remove(id: string): Promise<boolean> {
-    try {
-      await this.sachCollection.doc(id).delete();
-      return true;
-    } catch (error) {
-      return false;
-    }
+    await this.findOne(id);
+    const ref = this.sachCollection.doc(id);
+    await ref.delete();
+    return true;
   }
 
   async increaseLuotDoc(idSach: string): Promise<void> {

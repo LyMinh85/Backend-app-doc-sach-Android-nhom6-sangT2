@@ -14,12 +14,14 @@ import { SachService } from './sach.service';
 import { CreateSachDto } from './dto/create-sach.dto';
 import { UpdateSachDto } from './dto/update-sach.dto';
 import { SachQueryParams } from './interface/sach-query-params.interface';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiAcceptedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { ChuongService } from '../chuong/chuong.service';
 import { CreateChuongDto } from '../chuong/dto/create-chuong.dto';
 import { DanhGiaService } from '../danh-gia/danh-gia.service';
 import { CreateDanhGiaDto } from '../danh-gia/dto/create-danh-gia.dto';
 import { LuotDocService } from '../luot-doc/luot-doc.service';
+import { SachDto } from './dto/sach.dto';
+import { ChuongDto } from '../chuong/dto/chuong.dto';
 
 @Controller('api/sach')
 export class SachController {
@@ -43,31 +45,39 @@ export class SachController {
   }
 
   @Get()
+  @ApiOkResponse({ description: 'List of Sach', type: [SachDto] })
   @ApiQuery({ name: 'TenSach', required: false })
   @ApiQuery({ name: 'NhaXuatBan', required: false })
-  async findAll(@Query() sachQueryParams: SachQueryParams) {
+  async findAll(@Query() sachQueryParams: SachQueryParams): Promise<SachDto[]> {
     return await this.sachService.findAll(sachQueryParams);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  @ApiOkResponse({ description: 'Sach detail', type: SachDto })
+  async findOne(@Param('id') id: string): Promise<SachDto> {
     return await this.sachService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ description: 'Updated Sach', type: SachDto })
   async update(@Param('id') id: string, @Body() updateSachDto: UpdateSachDto) {
     return await this.sachService.update(id, updateSachDto);
   }
 
   @Delete(':id')
+  @ApiOkResponse({ description: 'Deleted Sach', type: SachDto })
   async remove(@Param('id') id: string) {
     return await this.sachService.remove(id);
   }
 
   // Các API liên quan đến chương
   @Get(':idSach/chuong')
-  async findAllChuong(@Param('idSach') idSach: string) {
-    return await this.chuongService.find({ idSach });
+  @ApiQuery({ name: 'idNguoiDung', required: false })
+  async findAllChuong(
+    @Param('idSach') idSach: string,
+    @Query('idNguoiDung') idNguoiDung?: string,
+  ): Promise<ChuongDto[]> {
+    return await this.chuongService.find(idSach, idNguoiDung);
   }
 
   @Post(':idSach/chuong')

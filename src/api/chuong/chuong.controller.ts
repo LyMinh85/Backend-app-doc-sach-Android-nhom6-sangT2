@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { ChuongService } from './chuong.service';
 import { CreateChuongDto } from './dto/create-chuong.dto';
@@ -14,10 +16,17 @@ import { UpdateChuongDto } from './dto/update-chuong.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { Chuong } from './entities/chuong.entity';
 import { FindChuongParams } from './params/find-chuong.params';
+import { DanhDauChuongService } from '../danh-dau-chuong/danh-dau-chuong.service';
+import { DanhDauChuong } from '../danh-dau-chuong/entities/danh-dau-chuong.entity';
 
 @Controller('api/chuong')
 export class ChuongController {
-  constructor(private readonly chuongService: ChuongService) {}
+  constructor(
+    private readonly chuongService: ChuongService,
+
+    @Inject(forwardRef(() => DanhDauChuongService))
+    private readonly danhDauChuongService: DanhDauChuongService,
+  ) {}
 
   // @Post()
   // @ApiCreatedResponse({
@@ -70,4 +79,28 @@ export class ChuongController {
   // async getFinalChuong(@Param('idSach') idSach: string): Promise<Chuong> {
   //   return await this.chuongService.getFinalChuong(idSach);
   // }
+
+  @Post(':idChuong/danh-dau/:idNguoiDung')
+  @ApiCreatedResponse({
+    description: 'Đánh dấu chương thành công.',
+    type: DanhDauChuong,
+  })
+  async createDanhDauChuong(
+    @Param('idChuong') idChuong: string,
+    @Param('idNguoiDung') idNguoiDung: string,
+  ) {
+    return this.danhDauChuongService.create(idChuong, { idNguoiDung });
+  }
+
+  @Delete(':idChuong/danh-dau/:idNguoiDung')
+  @ApiOkResponse({
+    description: 'Bỏ đánh dấu chương thành công.',
+    type: DanhDauChuong,
+  })
+  async removeDanhDauChuong(
+    @Param('idChuong') idChuong: string,
+    @Param('idNguoiDung') idNguoiDung: string,
+  ) {
+    return this.danhDauChuongService.remove(idChuong, idNguoiDung);
+  }
 }

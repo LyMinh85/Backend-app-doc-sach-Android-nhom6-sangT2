@@ -31,7 +31,7 @@ export class TokenService {
     return ref.id;
   }
 
-  async createTokenById(docId: string, token: string) {
+  async createTokenById(token: string, docId: string) {
     const snapshot = await this.tokenCollection.doc(docId).get();
 
     const data = snapshot.data();

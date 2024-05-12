@@ -7,6 +7,7 @@ import { FirebaseRepository } from '../firebase/firebase.repository';
 import { SachService } from '../sach/sach.service';
 import { NguoiDungService } from '../nguoi-dung/nguoi-dung.service';
 import { ThuVienSachCaNhanDto } from './dto/thu-vien-sach-ca-nhan.dto';
+import * as moment from 'moment';
 
 @Injectable()
 export class ThuVienSachCaNhanService {
@@ -27,6 +28,9 @@ export class ThuVienSachCaNhanService {
     return new ThuVienSachCaNhanDto({
       ...thuVienSachCaNhan,
       sach,
+      ngayThem: moment(thuVienSachCaNhan.ngayThem.toDate()).format(
+        'DD/MM/YYYY',
+      ),
     });
   }
 

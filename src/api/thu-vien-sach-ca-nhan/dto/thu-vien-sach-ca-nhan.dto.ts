@@ -12,7 +12,7 @@ export class ThuVienSachCaNhanDto {
   sach: SachDto;
 
   @ApiProperty()
-  ngayThem: Date;
+  ngayThem: string;
 
   @ApiProperty()
   sachYeuThich: boolean;

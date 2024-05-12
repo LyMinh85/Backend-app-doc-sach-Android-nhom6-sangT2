@@ -8,9 +8,8 @@ import { Query } from '@nestjs/common';
 export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
-  @Post('createTokenById/:id')
-  createTokenById(@Param('id') id: string, @Body() createTokenDto: CreateTokenDto) {
-    return this.tokenService.createTokenById(createTokenDto, id);
+  createTokenById(@Param('token') token: string, @Param('id') id: string) {
+    return this.tokenService.createTokenById(token, id);
   }
 
   @Post('createIDToken/:id')

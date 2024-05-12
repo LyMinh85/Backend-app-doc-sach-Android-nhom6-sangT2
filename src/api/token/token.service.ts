@@ -31,7 +31,7 @@ export class TokenService {
     return ref.id;
   }
 
-  async createTokenById(createTokenDto: CreateTokenDto, docId: string) {
+  async createTokenById(docId: string, token: string) {
     const snapshot = await this.tokenCollection.doc(docId).get();
 
     const data = snapshot.data();
@@ -47,7 +47,7 @@ export class TokenService {
 
     const tokenData = {
 
-      [lastKeyInt + 1]: createTokenDto.token
+      [lastKeyInt + 1]: token
 
     };
 

@@ -17,7 +17,7 @@ import { ThuVienSachCaNhanDto } from './dto/thu-vien-sach-ca-nhan.dto';
 export class ThuVienSachCaNhanController {
   constructor(
     private readonly thuVienSachCaNhanService: ThuVienSachCaNhanService,
-  ) {}
+  ) { }
 
   // @Post()
   // @ApiCreatedResponse({
@@ -30,23 +30,23 @@ export class ThuVienSachCaNhanController {
   //   return this.thuVienSachCaNhanService.create(createThuVienSachCaNhanDto);
   // }
 
-  // @Get()
-  // @ApiOkResponse({
-  //   type: [ThuVienSachCaNhanDto],
-  //   description: 'Get all ThuVienSachCaNhan',
-  // })
-  // findAll(): Promise<ThuVienSachCaNhanDto[]> {
-  //   return this.thuVienSachCaNhanService.findAll();
-  // }
+  @Get()
+  @ApiOkResponse({
+    type: [ThuVienSachCaNhanDto],
+    description: 'Get all ThuVienSachCaNhan',
+  })
+  findAll(): Promise<ThuVienSachCaNhanDto[]> {
+    return this.thuVienSachCaNhanService.findAll();
+  }
 
-  // @Get(':id')
-  // @ApiOkResponse({
-  //   type: ThuVienSachCaNhanDto,
-  //   description: 'Get one ThuVienSachCaNhan by id',
-  // })
-  // findOne(@Param('id') id: string): Promise<ThuVienSachCaNhanDto> {
-  //   return this.thuVienSachCaNhanService.findOne(id);
-  // }
+  @Get(':id')
+  @ApiOkResponse({
+    type: ThuVienSachCaNhanDto,
+    description: 'Get one ThuVienSachCaNhan by id',
+  })
+  findOne(@Param('id') id: string): Promise<ThuVienSachCaNhanDto> {
+    return this.thuVienSachCaNhanService.findOne(id);
+  }
 
   // @Patch(':id')
   // @ApiOkResponse({
@@ -60,12 +60,12 @@ export class ThuVienSachCaNhanController {
   //   return this.thuVienSachCaNhanService.update(id, updateThuVienSachCaNhanDto);
   // }
 
-  // @Delete(':id')
-  // @ApiOkResponse({
-  //   type: Boolean,
-  //   description: 'Delete ThuVienSachCaNhan by id',
-  // })
-  // remove(@Param('id') id: string): Promise<boolean> {
-  //   return this.thuVienSachCaNhanService.remove(id);
-  // }
+  @Delete(':id')
+  @ApiOkResponse({
+    type: Boolean,
+    description: 'Delete ThuVienSachCaNhan by id',
+  })
+  remove(@Param('id') id: string): Promise<boolean> {
+    return this.thuVienSachCaNhanService.remove(id);
+  }
 }

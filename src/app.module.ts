@@ -12,6 +12,8 @@ import { DanhGiaModule } from './api/danh-gia/danh-gia.module';
 import { ThuVienSachCaNhanModule } from './api/thu-vien-sach-ca-nhan/thu-vien-sach-ca-nhan.module';
 import { LichSuCaNhanModule } from './api/lich-su-ca-nhan/lich-su-ca-nhan.module';
 import { DanhDauChuongModule } from './api/danh-dau-chuong/danh-dau-chuong.module';
+import { NotificationModule } from './api/notification/notification.module';
+import { TokenModule } from './api/token/token.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { DanhDauChuongModule } from './api/danh-dau-chuong/danh-dau-chuong.modul
     ThuVienSachCaNhanModule,
     LichSuCaNhanModule,
     DanhDauChuongModule,
+    NotificationModule,
+    TokenModule,
   ],
   controllers: [AppController],
   providers: [AppService],

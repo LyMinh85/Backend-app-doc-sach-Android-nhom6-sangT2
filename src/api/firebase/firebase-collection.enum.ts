@@ -8,4 +8,6 @@ export enum FirebaseCollection {
   ThuVienSachCaNhan = 'ThuVienSachCaNhan',
   LichSuCaNhan = 'LichSuCaNhan',
   DanhDauChuong = 'DanhDauChuong',
+  Token = 'Token',
+  Notification = 'Notification',
 }

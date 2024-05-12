@@ -8,6 +8,7 @@ import { Query } from '@nestjs/common';
 export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
+  @Post('createTokenById/:token/userID/:id')
   createTokenById(@Param('token') token: string, @Param('id') id: string) {
     return this.tokenService.createTokenById(token, id);
   }

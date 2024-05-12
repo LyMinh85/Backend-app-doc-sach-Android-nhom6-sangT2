@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNguoiDungDto } from './dto/create-nguoi-dung.dto';
 import { UpdateNguoiDungDto } from './dto/update-nguoi-dung.dto';
 import { FirebaseRepository } from '../firebase/firebase.repository';
 import { NguoiDung } from './entities/nguoi-dung.entity';
 import { FirebaseCollection } from '../firebase/firebase-collection.enum';
+import { LoginPasswordEmailDto } from './dto/login-password-email.dto';
+import { LoginByGoogleDto } from './dto/login-by-google.dto';
 
 @Injectable()
 export class NguoiDungService {
@@ -45,5 +47,34 @@ export class NguoiDungService {
     } catch (error) {
       return false;
     }
+  }
+
+  async login(
+    loginPasswordEmailDto: LoginPasswordEmailDto,
+  ): Promise<NguoiDung> {
+    const { email, matKhau } = loginPasswordEmailDto;
+    const snapshot = await this.nguoiDungCollection
+      .where('email', '==', email)
+      .where('matKhau', '==', matKhau)
+      .get();
+    if (snapshot.empty) {
+      throw new NotFoundException('Email hoặc mật khẩu không đúng');
+    }
+    const doc = snapshot.docs[0];
+    return new NguoiDung({ id: doc.id, ...doc.data() });
+  }
+
+  async loginGoogle(loginByGoogleDto: LoginByGoogleDto): Promise<NguoiDung> {
+    const { googleId } = loginByGoogleDto;
+    const snapshot = await this.nguoiDungCollection
+      .where('googleId', '==', googleId)
+      .get();
+    if (snapshot.empty) {
+      throw new NotFoundException(
+        'Không tìm thấy người dùng với tài khoản google này',
+      );
+    }
+    const doc = snapshot.docs[0];
+    return new NguoiDung({ id: doc.id, ...doc.data() });
   }
 }

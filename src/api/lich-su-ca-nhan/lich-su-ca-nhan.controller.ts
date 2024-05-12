@@ -5,7 +5,7 @@ import { UpdateLichSuCaNhanDto } from './dto/update-lich-su-ca-nhan.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { LichSuCaNhan } from './entities/lich-su-ca-nhan.entity';
 
-@Controller('lich-su-ca-nhan')
+@Controller('api/lich-su-ca-nhan')
 export class LichSuCaNhanController {
   constructor(private readonly lichSuCaNhanService: LichSuCaNhanService) {}
 

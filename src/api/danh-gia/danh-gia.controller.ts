@@ -13,7 +13,7 @@ import { UpdateDanhGiaDto } from './dto/update-danh-gia.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { DanhGiaDto } from './dto/danh-gia.dto';
 
-@Controller('danh-gia')
+@Controller('api/danh-gia')
 export class DanhGiaController {
   constructor(private readonly danhGiaService: DanhGiaService) {}
 

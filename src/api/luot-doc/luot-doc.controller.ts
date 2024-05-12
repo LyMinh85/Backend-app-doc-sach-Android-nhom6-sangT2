@@ -14,7 +14,7 @@ import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { LuotDoc } from './entities/luot-doc.entity';
 import { LuotDocDTO } from './dto/luot-doc.dto';
 
-@Controller('luot-doc')
+@Controller('api/luot-doc')
 export class LuotDocController {
   constructor(private readonly luotDocService: LuotDocService) {}
 

@@ -11,7 +11,7 @@ import { DanhDauChuongService } from './danh-dau-chuong.service';
 import { CreateDanhDauChuongDto } from './dto/create-danh-dau-chuong.dto';
 import { UpdateDanhDauChuongDto } from './dto/update-danh-dau-chuong.dto';
 
-@Controller('danh-dau-chuong')
+@Controller('api/danh-dau-chuong')
 export class DanhDauChuongController {
   constructor(private readonly danhDauChuongService: DanhDauChuongService) {}
 

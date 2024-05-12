@@ -38,6 +38,12 @@ export class SachDto implements ISachDto {
   @ApiProperty()
   tongSoLuotDoc: number;
 
+  @ApiProperty()
+  tongSoDanhGia: number;
+
+  @ApiProperty()
+  ngayDang: string;
+
   constructor(source: ISachDto) {
     this.id = source.id;
     this.img = source.img;

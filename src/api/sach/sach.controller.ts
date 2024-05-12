@@ -13,7 +13,10 @@ import {
 import { SachService } from './sach.service';
 import { CreateSachDto } from './dto/create-sach.dto';
 import { UpdateSachDto } from './dto/update-sach.dto';
-import { SachQueryParams } from './interface/sach-query-params.interface';
+import {
+  NgayDangSort,
+  SachQueryParams,
+} from './interface/sach-query-params.interface';
 import {
   ApiAcceptedResponse,
   ApiOkResponse,
@@ -57,6 +60,14 @@ export class SachController {
   @ApiOkResponse({ description: 'List of Sach', type: [SachDto] })
   @ApiQuery({ name: 'TenSach', required: false })
   @ApiQuery({ name: 'NhaXuatBan', required: false })
+  @ApiQuery({
+    enum: NgayDangSort,
+    name: 'ngayDangSort',
+    required: false,
+    enumName: 'NgayDangSort',
+  })
+  @ApiQuery({ name: 'idNguoiDung', required: false })
+  @ApiQuery({ name: 'xemNhieuNhat', required: false, type: Boolean })
   async findAll(@Query() sachQueryParams: SachQueryParams): Promise<SachDto[]> {
     return await this.sachService.findAll(sachQueryParams);
   }

@@ -9,6 +9,7 @@ import { FirebaseCollection } from '../firebase/firebase-collection.enum';
 import { TheLoaiSach } from '../the-loai-sach/entities/the-loai-sach.entity';
 import { SachDto } from './dto/sach.dto';
 import { FieldValue } from 'firebase-admin/firestore';
+import * as moment from 'moment';
 
 @Injectable()
 export class SachService {
@@ -19,6 +20,26 @@ export class SachService {
     this.sachCollection = this.firebaseRepository.getCollection(
       this.COLLECTION_NAME,
     );
+  }
+
+  async docToSachDto(
+    doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
+  ): Promise<SachDto> {
+    const sach = new SachDto({ id: doc.id, ...doc.data() });
+    if (doc.data().ListTheLoaiRef) {
+      const listTheLoai = await Promise.all(
+        doc.data().ListTheLoaiRef.map(async (theLoaiRef) => {
+          const theLoaiDoc = await theLoaiRef.get();
+          return new TheLoaiSach({
+            id: theLoaiDoc.id,
+            ...theLoaiDoc.data(),
+          });
+        }),
+      );
+      sach.ListTheLoai = listTheLoai;
+    }
+    sach.ngayDang = moment(sach.ngayDang).format('DD/MM/YYYY');
+    return sach;
   }
 
   async create(createSachDto: CreateSachDto): Promise<Sach> {
@@ -37,13 +58,15 @@ export class SachService {
       ListTheLoaiRef: listTheLoaiRef,
       tongSoLuotDoc: 0,
       tongSoDanhGia: 0,
+      ngayDang: new Date(),
     });
     await ref.set({ ...sach });
     return sach;
   }
 
   async findAll(sachQueryParams: SachQueryParams): Promise<SachDto[]> {
-    const { TenSach, NhaXuatBan } = sachQueryParams;
+    const { TenSach, NhaXuatBan, idNguoiDung, ngayDang, xemNhieuNhat } =
+      sachQueryParams;
     let query = this.firebaseRepository.getQuery(this.COLLECTION_NAME);
 
     if (TenSach) {
@@ -54,25 +77,23 @@ export class SachService {
       query = query.where('NhaXuatBan', '==', NhaXuatBan);
     }
 
+    if (idNguoiDung) {
+      query = query.where('idNguoiDung', '==', idNguoiDung);
+    }
+
+    // sort asc and desc by ngayDang
+    if (ngayDang) {
+      query = query.orderBy('ngayDang', ngayDang);
+    }
+
+    // sort by xemNhieuNhat
+    if (xemNhieuNhat) {
+      query = query.orderBy('tongSoLuotDoc', 'desc');
+    }
+
     const snapshot = await query.get();
     const sachList: SachDto[] = await Promise.all(
-      snapshot.docs.map(async (doc) => {
-        const sach = new SachDto({ id: doc.id, ...doc.data() });
-        console.log(sach);
-        if (doc.data().ListTheLoaiRef) {
-          const listTheLoai = await Promise.all(
-            doc.data().ListTheLoaiRef.map(async (theLoaiRef) => {
-              const theLoaiDoc = await theLoaiRef.get();
-              return new TheLoaiSach({
-                id: theLoaiDoc.id,
-                ...theLoaiDoc.data(),
-              });
-            }),
-          );
-          sach.ListTheLoai = listTheLoai;
-        }
-        return sach;
-      }),
+      snapshot.docs.map((doc) => this.docToSachDto(doc)),
     );
     return sachList;
   }
@@ -116,9 +137,11 @@ export class SachService {
           .getCollection(FirebaseCollection.TheLoai)
           .doc(theLoaiId),
       );
+      await ref.update({ ...updateSachDto, ListTheLoaiRef: listTheLoaiRef });
+    } else {
+      await ref.update({ ...updateSachDto });
     }
 
-    await ref.update({ ...updateSachDto, ListTheLoaiRef: listTheLoaiRef });
     return await this.findOne(id);
   }
 

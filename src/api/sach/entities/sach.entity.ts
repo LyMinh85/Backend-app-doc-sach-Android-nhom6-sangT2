@@ -32,6 +32,12 @@ export class Sach {
     FirebaseFirestore.DocumentData
   >[];
 
+  @ApiProperty()
+  idNguoiDung: string;
+
+  @ApiProperty()
+  ngayDang: Date;
+
   constructor(source: Partial<Sach>) {
     Object.assign(this, source);
   }

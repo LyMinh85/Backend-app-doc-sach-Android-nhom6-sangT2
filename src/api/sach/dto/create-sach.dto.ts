@@ -26,4 +26,8 @@ export class CreateSachDto {
   @ApiProperty()
   @IsOptional()
   ListTheLoaiId: string[];
+
+  @ApiProperty()
+  @IsString()
+  idNguoiDung: string;
 }

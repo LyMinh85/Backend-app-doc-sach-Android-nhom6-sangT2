@@ -28,4 +28,8 @@ export class CreateNguoiDungDto {
   @IsString()
   @IsOptional()
   phanCap: string;
+
+  @ApiProperty()
+  @IsString()
+  uuid: string;
 }

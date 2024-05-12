@@ -17,7 +17,7 @@ export class NguoiDungService {
   }
 
   async create(createNguoiDungDto: CreateNguoiDungDto): Promise<NguoiDung> {
-    const ref = this.nguoiDungCollection.doc();
+    const ref = this.nguoiDungCollection.doc(createNguoiDungDto.uuid);
     const res = await ref.set({ id: ref.id, ...createNguoiDungDto });
     return new NguoiDung({ id: ref.id, ...createNguoiDungDto });
   }

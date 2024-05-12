@@ -16,6 +16,12 @@ export class NguoiDung {
   @ApiProperty()
   phanCap: string;
   constructor(source: Partial<NguoiDung>) {
-    Object.assign(this, source);
+    this.id = source.id;
+    this.tenNguoiDung = source.tenNguoiDung;
+    this.avatar = source.avatar;
+    this.email = source.email;
+    this.googleId = source.googleId;
+    this.matKhau = source.matKhau;
+    this.phanCap = source.phanCap;
   }
 }

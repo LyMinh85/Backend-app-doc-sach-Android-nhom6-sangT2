@@ -14,14 +14,14 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // @Get('test')
-  // async test() {
-  //   const listSach = await this.sachService.findAll({});
-  //   console.log(listSach);
-  //   listSach.forEach(async (sach) => {
-  //     this.sachService.update(sach.id, {
-  //       idNguoiDung: '3MTFyduLepaRb0LuRYi7SLDjh3R2',
-  //     });
-  //   });
-  // }
+  @Get('test')
+  async test() {
+    const listSach = await this.sachService.findAll({});
+    console.log(listSach);
+    listSach.forEach(async (sach) => {
+      this.sachService.update(sach.id, {
+        idNguoiDung: 'fYw3HzyQGqdME6zPzDF6YSXPtPu1',
+      });
+    });
+  }
 }

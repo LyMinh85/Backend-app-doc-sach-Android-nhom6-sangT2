@@ -47,19 +47,32 @@ export class SachService {
     const ListTheLoaiId = createSachDto.ListTheLoaiId;
     // remove ListTheLoaiId from createSachDto
     delete createSachDto.ListTheLoaiId;
-    const listTheLoaiRef = ListTheLoaiId.map((theLoaiId) =>
-      this.firebaseRepository
-        .getCollection(FirebaseCollection.TheLoai)
-        .doc(theLoaiId),
-    );
-    const sach = new Sach({
-      id: ref.id,
-      ...createSachDto,
-      ListTheLoaiRef: listTheLoaiRef,
-      tongSoLuotDoc: 0,
-      tongSoDanhGia: 0,
-      ngayDang: new Date(),
-    });
+    let sach;
+    if (ListTheLoaiId) {
+      const listTheLoaiRef = ListTheLoaiId.map((theLoaiId) =>
+        this.firebaseRepository
+          .getCollection(FirebaseCollection.TheLoai)
+          .doc(theLoaiId),
+      );
+
+      sach = new Sach({
+        id: ref.id,
+        ...createSachDto,
+        ListTheLoaiRef: listTheLoaiRef,
+        tongSoLuotDoc: 0,
+        tongSoDanhGia: 0,
+        ngayDang: new Date(),
+      });
+    } else {
+      sach = new Sach({
+        id: ref.id,
+        ...createSachDto,
+        tongSoLuotDoc: 0,
+        tongSoDanhGia: 0,
+        ngayDang: new Date(),
+      });
+    }
+
     await ref.set({ ...sach });
     return sach;
   }

@@ -4,7 +4,7 @@ import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { Notification } from './entities/notification.entity';
 import { Query } from '@nestjs/common';
-@Controller('notification')
+@Controller('api/notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) { }
 

@@ -20,8 +20,6 @@ export class NotificationService {
   async createNotificationById(createNotificationDto: CreateNotificationDto, docId: string) {
     const snapshot = await this.notificationCollection.doc(docId).get();
 
-
-    
       const data = snapshot.data();
       const keys = Object.keys(data);
       const lastKey = keys[keys.length - 1]; // Lấy giá trị key cuối cùng
@@ -81,7 +79,7 @@ export class NotificationService {
   }
 
   // GỬI FCM tới các token có trong mảng
-  async sendMultipleFCM(tokens: string[], ids: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
+  async sendMultipleFCM(tokens: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
     const message: admin.messaging.MulticastMessage = {
       tokens: tokens,
       data: {

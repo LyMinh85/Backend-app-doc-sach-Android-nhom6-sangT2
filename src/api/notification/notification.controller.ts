@@ -31,8 +31,8 @@ export class NotificationController {
     await this.notificationService.removeNotification(id, keys);
   }
 
-  // @Post('sendFCMToMultipleIds/:ids')
-  // sendFCMToMultipleIds(@Param('ids') ids: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<string> {
-  //   return this.notificationService.createIDNotification(ids, createNotificationDto);
-  // }
+  @Post('sendMultipleFCM')
+  sendMultipleFCM(@Param('tokens') tokens: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendMultipleFCM(tokens, createNotificationDto);
+  }
 }

@@ -67,19 +67,21 @@ export class NotificationService {
     return notifications;
   }
 
-  async removeNotification(docId: string, mapKeys: string[]): Promise<void> {
+  async removeNotificationById(docId: string, mapKeys: string[]): Promise<void> {
     const docRef = this.notificationCollection.doc(docId);
 
-    const updateData = mapKeys.reduce((acc, key) => {
-      acc[key] = FieldValue.delete();
-      return acc;
-    }, {});
+    const updateData: { [key: string]: any } = {};
+
+    for (const key of mapKeys) {
+      updateData[key] = FieldValue.delete();
+    }
 
     await docRef.update(updateData);
   }
 
   // GỬI FCM tới các token có trong mảng
   async sendMultipleFCM(tokens: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
+
     const message: admin.messaging.MulticastMessage = {
       tokens: tokens,
       data: {
@@ -96,6 +98,27 @@ export class NotificationService {
       throw new Error('Failed to send FCM multicast');
     }
   }
+
+
+  async sendSingleFCM(token: string, createNotificationDto: CreateNotificationDto): Promise<void> {
+    const message: admin.messaging.Message = {
+      token: token,
+      data: {
+        title: createNotificationDto.title,
+        content: createNotificationDto.content,
+      },
+    };
+  
+    try {
+      const response = await admin.messaging().send(message);
+      console.log('FCM response:', response);
+    } catch (error) {
+      console.error('Error sending FCM:', error);
+      throw new Error('Failed to send FCM');
+    }
+  }
+
+
 
   async sendFCMToTopics(topics: string[], title: string, body: string): Promise<void> {
     const message: admin.messaging.Message = {

@@ -92,12 +92,12 @@ export class TokenService {
 
   async removeTokenById(docId: string, mapKeys: string[]): Promise<void> {
     const docRef = this.tokenCollection.doc(docId);
-
-    const updateData = mapKeys.reduce((acc, key) => {
-      acc[key] = FieldValue.delete();
-      return acc;
-    }, {});
-
+  
+    const updateData: { [key: string]: any } = {};
+    for (const key of mapKeys) {
+      updateData[key] = FieldValue.delete();
+    }
+  
     await docRef.update(updateData);
   }
 

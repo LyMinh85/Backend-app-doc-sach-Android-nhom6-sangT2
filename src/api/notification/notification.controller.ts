@@ -24,15 +24,24 @@ export class NotificationController {
   }
 
   @Delete('removeNotificationById/:id')
-  async removeNotification(
+  async removeNotificationById(
     @Param('id') id: string,
     @Query('keys') keys: string[],
   ): Promise<void> {
-    await this.notificationService.removeNotification(id, keys);
+    await this.notificationService.removeNotificationById(id, keys);
   }
 
+
+  @Post('sendSingleFCM/:token')
+  sendSingleFCM(@Param('token') token: string, @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendSingleFCM(token, createNotificationDto);
+  }
+
+
   @Post('sendMultipleFCM')
-  sendMultipleFCM(@Param('tokens') tokens: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+  sendMultipleFCM(@Query('tokens') tokens: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
     return this.notificationService.sendMultipleFCM(tokens, createNotificationDto);
   }
+
+
 }

@@ -45,8 +45,16 @@ export class NotificationService {
 
   async createIDNotification(idUser: string): Promise<string> {
     const ref = this.notificationCollection.doc(idUser);
-    await ref.set({});
-    return ref.id;
+    
+    const doc = await ref.get();
+    if (doc.exists) {
+      // Nếu tài liệu đã tồn tại, bạn có thể trả về docid hiện có mà không thay đổi nó.
+      return doc.id;
+    } else {
+      // Nếu tài liệu chưa tồn tại, bạn có thể tạo mới tài liệu và trả về docid mới.
+      await ref.set({});
+      return ref.id;
+    }
   }
 
   async findAllNotificationById(idUser: string): Promise<Notification[]> {

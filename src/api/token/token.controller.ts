@@ -41,7 +41,6 @@ export class TokenController {
     @Param('id') id: string,
     @Param('token') token: string,
   ): Promise<void> {
-    console.log(token + " " + id);
     await this.tokenService.removeTokenByToken(id, token);
   }
 }

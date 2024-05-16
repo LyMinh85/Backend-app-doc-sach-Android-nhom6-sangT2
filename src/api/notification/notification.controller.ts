@@ -43,5 +43,14 @@ export class NotificationController {
     return this.notificationService.sendMultipleFCM(tokens, createNotificationDto);
   }
 
+  
+  @Post('sendFCMToTopics')
+  sendFCMToTopics(@Query('topics') topics: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendFCMToTopics(topics, createNotificationDto);
+  }
 
+  @Post('sendFCMToSingleTopic')
+  sendFCMToSingleTopic(@Query('topic') topic: string, @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendFCMToSingleTopic(topic, createNotificationDto);
+  }
 }

@@ -118,23 +118,46 @@ export class NotificationService {
     }
   }
 
-
-
-  async sendFCMToTopics(topics: string[], title: string, body: string): Promise<void> {
-    const message: admin.messaging.Message = {
-      topic: topics.join(','), // Join các topic thành một chuỗi phân cách bằng dấu phẩy
-      notification: {
-        title: title,
-        body: body,
-      },
-    };
+  async sendFCMToSingleTopic(topic: string, createNotificationDto: CreateNotificationDto): Promise<void> {
+    const messaging = admin.messaging();
+    
+      const message: admin.messaging.Message = {
+        topic:topic,
+        data: {
+          title: createNotificationDto.title,
+          content: createNotificationDto.content,
+        },
+      };
   
-    try {
-      const response = await admin.messaging().send(message);
-      console.log('FCM topic response:', response);
-    } catch (error) {
-      console.error('Error sending FCM to topics:', error);
-      throw new Error('Failed to send FCM to topics');
+      try {
+        const response = await messaging.send(message);
+        console.log(`FCM sent to topic ${topic}:`, response);
+      } catch (error) {
+        console.error(`Failed to send FCM to topic ${topic}:`, error);
+        // Xử lý lỗi nếu cần thiết
+      }
+    
+  }
+
+  async sendFCMToTopics(topics: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
+    const messaging = admin.messaging();
+    
+    for (const topic of topics) {
+      const message: admin.messaging.Message = {
+        topic:topic,
+        data: {
+          title: createNotificationDto.title,
+          content: createNotificationDto.content,
+        },
+      };
+  
+      try {
+        const response = await messaging.send(message);
+        console.log(`FCM sent to topic ${topic}:`, response);
+      } catch (error) {
+        console.error(`Failed to send FCM to topic ${topic}:`, error);
+        // Xử lý lỗi nếu cần thiết
+      }
     }
   }
 }

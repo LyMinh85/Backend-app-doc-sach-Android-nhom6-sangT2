@@ -23,7 +23,10 @@ export class SachService {
   }
 
   async docToSachDto(
-    doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>,
+    doc: FirebaseFirestore.DocumentSnapshot<
+      FirebaseFirestore.DocumentData,
+      FirebaseFirestore.DocumentData
+    >,
   ): Promise<SachDto> {
     const sach = new SachDto({ id: doc.id, ...doc.data() });
     if (doc.data().ListTheLoaiRef) {
@@ -95,9 +98,7 @@ export class SachService {
     }
 
     // sort asc and desc by ngayDang
-    if (ngayDang) {
-      query = query.orderBy('ngayDang', ngayDang);
-    }
+    query = query.orderBy('ngayDang', 'desc');
 
     // sort by xemNhieuNhat
     if (xemNhieuNhat) {
@@ -118,23 +119,7 @@ export class SachService {
       throw new NotFoundException(`Sach with id ${id} not found`);
     }
 
-    const sachDto: SachDto = new SachDto({
-      id: snapshot.id,
-      ...snapshot.data(),
-    });
-    if (snapshot.data().ListTheLoaiRef) {
-      const listTheLoai = await Promise.all(
-        snapshot.data().ListTheLoaiRef.map(async (theLoaiRef) => {
-          const theLoaiDoc = await theLoaiRef.get();
-          return new TheLoaiSach({
-            id: theLoaiDoc.id,
-            ...theLoaiDoc.data(),
-          });
-        }),
-      );
-      sachDto.ListTheLoai = listTheLoai;
-    }
-    return sachDto;
+    return await this.docToSachDto(snapshot);
   }
 
   async update(id: string, updateSachDto: UpdateSachDto): Promise<SachDto> {

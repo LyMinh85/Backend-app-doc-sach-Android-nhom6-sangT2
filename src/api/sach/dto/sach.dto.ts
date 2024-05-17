@@ -11,6 +11,9 @@ interface ISachDto {
   Mota?: string;
   ListTheLoai?: TheLoaiSach[];
   tongSoLuotDoc?: number;
+  tongSoDanhGia?: number;
+  ngayDang?: string;
+  idNguoiDung?: string;
 }
 
 export class SachDto implements ISachDto {
@@ -44,6 +47,9 @@ export class SachDto implements ISachDto {
   @ApiProperty()
   ngayDang: string;
 
+  @ApiProperty()
+  idNguoiDung: string;
+
   constructor(source: ISachDto) {
     this.id = source.id;
     this.img = source.img;
@@ -53,5 +59,6 @@ export class SachDto implements ISachDto {
     this.Mota = source.Mota;
     this.ListTheLoai = source.ListTheLoai;
     this.tongSoLuotDoc = source.tongSoLuotDoc;
+    this.idNguoiDung = source.idNguoiDung;
   }
 }

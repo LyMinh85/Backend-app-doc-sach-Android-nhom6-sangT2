@@ -20,8 +20,6 @@ export class NotificationService {
   async createNotificationById(createNotificationDto: CreateNotificationDto, docId: string) {
     const snapshot = await this.notificationCollection.doc(docId).get();
 
-
-    
       const data = snapshot.data();
       const keys = Object.keys(data);
       const lastKey = keys[keys.length - 1]; // Lấy giá trị key cuối cùng
@@ -47,8 +45,16 @@ export class NotificationService {
 
   async createIDNotification(idUser: string): Promise<string> {
     const ref = this.notificationCollection.doc(idUser);
-    await ref.set({});
-    return ref.id;
+    
+    const doc = await ref.get();
+    if (doc.exists) {
+      // Nếu tài liệu đã tồn tại, bạn có thể trả về docid hiện có mà không thay đổi nó.
+      return doc.id;
+    } else {
+      // Nếu tài liệu chưa tồn tại, bạn có thể tạo mới tài liệu và trả về docid mới.
+      await ref.set({});
+      return ref.id;
+    }
   }
 
   async findAllNotificationById(idUser: string): Promise<Notification[]> {
@@ -69,19 +75,21 @@ export class NotificationService {
     return notifications;
   }
 
-  async removeNotification(docId: string, mapKeys: string[]): Promise<void> {
+  async removeNotificationById(docId: string, mapKeys: string[]): Promise<void> {
     const docRef = this.notificationCollection.doc(docId);
 
-    const updateData = mapKeys.reduce((acc, key) => {
-      acc[key] = FieldValue.delete();
-      return acc;
-    }, {});
+    const updateData: { [key: string]: any } = {};
+
+    for (const key of mapKeys) {
+      updateData[key] = FieldValue.delete();
+    }
 
     await docRef.update(updateData);
   }
 
   // GỬI FCM tới các token có trong mảng
-  async sendMultipleFCM(tokens: string[], ids: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
+  async sendMultipleFCM(tokens: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
+
     const message: admin.messaging.MulticastMessage = {
       tokens: tokens,
       data: {
@@ -99,21 +107,65 @@ export class NotificationService {
     }
   }
 
-  async sendFCMToTopics(topics: string[], title: string, body: string): Promise<void> {
+
+  async sendSingleFCM(token: string, createNotificationDto: CreateNotificationDto): Promise<void> {
     const message: admin.messaging.Message = {
-      topic: topics.join(','), // Join các topic thành một chuỗi phân cách bằng dấu phẩy
-      notification: {
-        title: title,
-        body: body,
+      token: token,
+      data: {
+        title: createNotificationDto.title,
+        content: createNotificationDto.content,
       },
     };
   
     try {
       const response = await admin.messaging().send(message);
-      console.log('FCM topic response:', response);
+      console.log('FCM response:', response);
     } catch (error) {
-      console.error('Error sending FCM to topics:', error);
-      throw new Error('Failed to send FCM to topics');
+      console.error('Error sending FCM:', error);
+      throw new Error('Failed to send FCM');
+    }
+  }
+
+  async sendFCMToSingleTopic(topic: string, createNotificationDto: CreateNotificationDto): Promise<void> {
+    const messaging = admin.messaging();
+    
+      const message: admin.messaging.Message = {
+        topic:topic,
+        data: {
+          title: createNotificationDto.title,
+          content: createNotificationDto.content,
+        },
+      };
+  
+      try {
+        const response = await messaging.send(message);
+        console.log(`FCM sent to topic ${topic}:`, response);
+      } catch (error) {
+        console.error(`Failed to send FCM to topic ${topic}:`, error);
+        // Xử lý lỗi nếu cần thiết
+      }
+    
+  }
+
+  async sendFCMToTopics(topics: string[], createNotificationDto: CreateNotificationDto): Promise<void> {
+    const messaging = admin.messaging();
+    
+    for (const topic of topics) {
+      const message: admin.messaging.Message = {
+        topic:topic,
+        data: {
+          title: createNotificationDto.title,
+          content: createNotificationDto.content,
+        },
+      };
+  
+      try {
+        const response = await messaging.send(message);
+        console.log(`FCM sent to topic ${topic}:`, response);
+      } catch (error) {
+        console.error(`Failed to send FCM to topic ${topic}:`, error);
+        // Xử lý lỗi nếu cần thiết
+      }
     }
   }
 }

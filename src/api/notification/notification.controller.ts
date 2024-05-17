@@ -4,7 +4,7 @@ import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { Notification } from './entities/notification.entity';
 import { Query } from '@nestjs/common';
-@Controller('notification')
+@Controller('api/notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) { }
 
@@ -24,15 +24,33 @@ export class NotificationController {
   }
 
   @Delete('removeNotificationById/:id')
-  async removeNotification(
+  async removeNotificationById(
     @Param('id') id: string,
     @Query('keys') keys: string[],
   ): Promise<void> {
-    await this.notificationService.removeNotification(id, keys);
+    await this.notificationService.removeNotificationById(id, keys);
   }
 
-  // @Post('sendFCMToMultipleIds/:ids')
-  // sendFCMToMultipleIds(@Param('ids') ids: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<string> {
-  //   return this.notificationService.createIDNotification(ids, createNotificationDto);
-  // }
+
+  @Post('sendSingleFCM/:token')
+  sendSingleFCM(@Param('token') token: string, @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendSingleFCM(token, createNotificationDto);
+  }
+
+
+  @Post('sendMultipleFCM')
+  sendMultipleFCM(@Query('tokens') tokens: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendMultipleFCM(tokens, createNotificationDto);
+  }
+
+  
+  @Post('sendFCMToTopics')
+  sendFCMToTopics(@Query('topics') topics: string[], @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendFCMToTopics(topics, createNotificationDto);
+  }
+
+  @Post('sendFCMToSingleTopic')
+  sendFCMToSingleTopic(@Query('topic') topic: string, @Body() createNotificationDto: CreateNotificationDto): Promise<void> {
+    return this.notificationService.sendFCMToSingleTopic(topic, createNotificationDto);
+  }
 }

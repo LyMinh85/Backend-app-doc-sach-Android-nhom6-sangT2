@@ -31,7 +31,7 @@ export class TokenService {
     return ref.id;
   }
 
-  async createTokenById(createTokenDto: CreateTokenDto, docId: string) {
+  async createTokenById(token: string, docId: string) {
     const snapshot = await this.tokenCollection.doc(docId).get();
 
     const data = snapshot.data();
@@ -47,7 +47,7 @@ export class TokenService {
 
     const tokenData = {
 
-      [lastKeyInt + 1]: createTokenDto.token
+      [lastKeyInt + 1]: token
 
     };
 
@@ -92,12 +92,12 @@ export class TokenService {
 
   async removeTokenById(docId: string, mapKeys: string[]): Promise<void> {
     const docRef = this.tokenCollection.doc(docId);
-
-    const updateData = mapKeys.reduce((acc, key) => {
-      acc[key] = FieldValue.delete();
-      return acc;
-    }, {});
-
+  
+    const updateData: { [key: string]: any } = {};
+    for (const key of mapKeys) {
+      updateData[key] = FieldValue.delete();
+    }
+  
     await docRef.update(updateData);
   }
 

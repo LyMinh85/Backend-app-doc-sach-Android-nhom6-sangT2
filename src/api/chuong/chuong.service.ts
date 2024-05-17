@@ -64,6 +64,9 @@ export class ChuongService {
       query = query.where('idSach', '==', idSach);
     }
 
+    // sort by soThuTu
+    query = query.orderBy('soThuTu');
+
     const snapshot = await query.get();
 
     return Promise.all(

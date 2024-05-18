@@ -85,12 +85,18 @@ export class ChuongService {
     );
   }
 
-  async findOne(id: string): Promise<Chuong> {
+  async findOne(id: string, idNguoiDung: string = null): Promise<Chuong> {
     const snapshot = await this.chuongCollection.doc(id).get();
-    return new Chuong({
-      id: snapshot.id,
-      ...snapshot.data(),
-    });
+    const chuong = new ChuongDto({ id: snapshot.id, ...snapshot.data() });
+
+    // Check if the chuong is danh dau
+    if (idNguoiDung) {
+      chuong.isDanhDau = await this.danhDauChuongService.isDanhDau(
+        chuong.id,
+        idNguoiDung,
+      );
+    }
+    return chuong;
   }
 
   async update(id: string, updateChuongDto: UpdateChuongDto): Promise<Chuong> {

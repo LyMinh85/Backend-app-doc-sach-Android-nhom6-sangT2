@@ -59,7 +59,11 @@ export class ChuongController {
     description: 'Record has been successfully retrieved.',
     type: Chuong,
   })
-  async findOne(@Param('id') id: string) {
+  @ApiQuery({ name: 'idNguoiDung', required: false })
+  async findOne(
+    @Param('id') id: string,
+    @Query('idNguoiDung') idNguoiDung?: string,
+  ) {
     return this.chuongService.findOne(id);
   }
 

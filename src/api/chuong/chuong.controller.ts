@@ -64,7 +64,7 @@ export class ChuongController {
     @Param('id') id: string,
     @Query('idNguoiDung') idNguoiDung?: string,
   ) {
-    return this.chuongService.findOne(id);
+    return this.chuongService.findOne(id, idNguoiDung);
   }
 
   @Patch(':id')
